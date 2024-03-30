@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+</head>
+<body style="background-color: #f7f7e6; font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+    <h1 style="color: #43bceb;">What's the Weather?</h1>
+    <input type="text" id="cityInput" placeholder="Enter a city" style="padding: 10px; font-size: 16px;">
+    <button onclick="getWeather()" style="padding: 10px 20px; font-size: 16px;">Get Weather</button>
+    <div id="weatherInfo" style="margin-top: 20px;"></div>
+<script>
+    function getWeather() {
+        var city = document.getElementById("cityInput").value;
+        var url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=2b107b9569a3156beb6135abad37c62d";
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            displayWeather(data);
+        })
+        .catch(error => {
+            console.log("Error fetching weather data:", error);
+            document.getElementById("weatherInfo").innerHTML = "Error fetching weather data. Please try again.";
+        });
+    }
+
+    function displayWeather(data) {
+        var weatherInfo = document.getElementById("weatherInfo");
+        weatherInfo.innerHTML = "";
+        var cityName = document.createElement("h2");
+        cityName.textContent = data.name + ", " + data.sys.country;
+        var weatherDesc = document.createElement("p");
+        weatherDesc.textContent = "Weather: " + data.weather[0].description;
+        var temperature = document.createElement("p");
+        temperature.textContent = "Temperature: " + (data.main.temp - 273.15).toFixed(1) + "°C";
+        var humidity = document.createElement("p");
+        humidity.textContent = "Humidity: " + data.main.humidity + "%";
+        var windSpeed = document.createElement("p");
+        windSpeed.textContent = "Wind Speed: " + data.wind.speed + " m/s";
+        weatherInfo.appendChild(cityName);
+        weatherInfo.appendChild(weatherDesc);
+        weatherInfo.appendChild(temperature);
+        weatherInfo.appendChild(humidity);
+        weatherInfo.appendChild(windSpeed);
+    }
+</script>
+</body>
+</html>
